@@ -96,7 +96,7 @@ Implement the more efficient Version of the "Find Duplicates" problem using a di
 Please make sure that the new repo that you made today on GitHub is public, and paste a link to it below.
 
 ```bash
-# paste your new repo link here...
+https://github.com/Aindelic/lab03-exercises
 
 ```
 
