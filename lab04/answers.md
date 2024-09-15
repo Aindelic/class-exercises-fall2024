@@ -1,1 +1,158 @@
-# Lab 4: Answer the Following Questions
+# Lab 4: Docker Tutorial
+
+**Before you begin...**
+
+1. Ensure that Docker is running and that you can access the Docker Dashboard
+1. Open the command prompt
+1. Run the following command: `docker run -dp 80:80 docker/getting-started`
+1. Open [http://localhost](http://localhost) in your browser to complete the tutorial.
+
+Complete the following tutorial sections (note that #4 and #9 are optional) and answer the questions below:
+
+## 1. Getting Started
+
+Consider the command you just ran: `docker run -d -p 80:80 docker/getting-started`
+
+Answer the following:
+
+1. Explain what the -p flag is doing (in your own words)
+
+```
+it specifies what port to connect to externally, so you would type in the address and docker would route the host machines port to the docker port.
+```
+
+2. How do you think [http://localhost](http://localhost) is communicating with Docker?
+
+```
+it is fowarding requests from the host port to the docker container port.
+```
+
+## 2. Our Application
+
+When you download and unzip `app`, save it inside of the `lab04` directory (while on your `lab04` branch). Then follow the instructions for this section. When you're done, answer the following questions about the `Dockerfile` you just made:
+
+1. What is `node:18-alpine` and where did it come from?
+
+```
+the image gets downloaded when the new container image is being built. it is used for node.js applications inside docker containers.
+
+2. Which commands in the Dockerfile instructed Docker to copy the code from `app` onto the Docker image? Explain.
+```
+
+it specificies the image with FROM node:18-alpine, then sets the directory in the container WORKDIR /app, then copies the application code COPY . .
+
+```
+
+3. What do you think would happen if you forgot to add `CMD ["node", "src/index.js"]` in your Dockerfile? Why?
+```
+
+the command to execute the application would be missing so it would just run nothing and close.
+
+```
+
+## 3. Updating Our App
+
+In this section, you learned that if you make a change to the code, you have to
+
+- Rebuild the Docker image,
+- Delete the container that you previously made (which is still running), and
+- Create a brand new container
+
+Answer the following:
+
+1. What are two ways you can delete a container?
+```
+
+docker rm <name> or docker rm -f <name>: to force quit and delete the container
+docker container prune: will delete all stopped containers
+
+```
+
+## 4. Sharing Our App (Optional)
+
+You don't have to complete this section, but I do want you to navigate to the Docker Image repository and take a look: [https://hub.docker.com/search?q=&type=image&image_filter=official](https://hub.docker.com/search?q=&type=image&image_filter=official). These are all of the potential Docker Images you can utilize to build your own containers (which will save you a lot of time)!
+
+## 5. Persisting our DB
+
+1. What is the difference between the `run` and the `exec` command?
+```
+
+run makes a container and exec will excute something in an already running container
+
+```
+2. What does the `docker exec -it` command do, exactly. Try asking ChatGPT!
+```
+
+chatGPT says:
+-i flag:
+Interactive: Keeps STDIN (input stream) open, allowing you to interact with the container (useful for shells or applications requiring input).
+-t flag:
+Pseudo-terminal: Allocates a TTY (terminal) session, which makes the container session behave like a terminal. This is especially useful for running commands like bash or sh interactively.
+
+```
+3. What was the purpose of creating a volume?
+```
+
+file changes are deleted or lost when the container is shut down or deleted, volumes provide persistant storage.
+
+```
+4. Optional: How does the TODO app code know to use the volume you just made? Hint: open `app/src/persistence/sqlite.js` and see if you can figure it out.
+
+## 6. Using Bind Mounts
+
+1. Why are bind mounts useful?
+```
+
+the allow a mount between the container and a directory on the host machine. some benifits are near instant file sharing and sync between the host machine and the docker container.
+
+```
+2. Note that the commands below can also be represented in a Dockerfile (instead of in one big string of commands on the terminal). What are the advantages of using a Dockerfile?
+
+```
+
+there are many reasons ranging from ease of use, consistancy, low margin of error, good scalibility for version control, its better for automated setups.
+
+````
+
+```
+docker run -dp 3000:3000 \
+    -w /app -v "$(pwd):/app" \
+    node:18-alpine \
+    sh -c "yarn install && yarn run dev"
+```
+
+## 7. Multi-Container Apps
+
+If you have never worked with network applications, this section may be confusing. That said, try to answer this question as best you can:
+
+1. If you have two containers running that are sandboxed (i.e., one container can't reach into another container and see its internal state or code), how did you get your two containers to communicate with one another? In other words, how was the web application container able to communicate with the database container?
+````
+
+with a little research, it seems that docker networks are responsible, docker creates a network layer that enable communication between the containers that are on the same network. docker assigns all container to a "bridge" network. docker sets up an internal dns servr that resolves the container names to the ip addresses.
+
+the web app could access the database using the container name.
+
+```
+
+## 8. Using Docker Compose
+
+1. What is the purpose of the `docker-compose.yml` file?
+```
+
+it is a config file for docker compose, and allows for automation of starting containers or multiple containers, servecies, networks and volumes in one file.
+
+```
+
+## 9. Image Building Best Practices (Optional)
+
+Optional section. Only complete if you want to.
+
+## What to turn in
+
+After answering all of the questions above...
+
+1. Make sure that your `app` folder is inside of your `lab04` folder (including your `Dockerfile` and `docker-compose.yml` files).
+1. Then, stage, commit, and push your 'lab04' branch to GitHub.
+1. Create a Pull Request (but do not merge your pull request -- that doesn't happen until Sarah reviews it).
+1. Paste a link to your pull request in the Lab04 submission
+```
