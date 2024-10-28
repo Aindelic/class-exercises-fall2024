@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 *.class
+=======
+solutions
+*.pyc
+node_modules
+.DS_Store
+>>>>>>> 15d881ed1e0fae75c2c21231287a303d0e226fc0
